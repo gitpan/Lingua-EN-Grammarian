@@ -1,5 +1,5 @@
 package Lingua::EN::Grammarian;
-our $VERSION = '0.000002';
+our $VERSION = '0.000004';
 
 use 5.010; use warnings;
 use Carp;
@@ -65,8 +65,17 @@ my $SPACE_TRANSITION = qr{
 }xms;
 
 # Extract that data...
-_load_cautions();
-_load_errors();
+my $loaded   = _load_cautions();
+   $loaded ||= _load_errors();
+
+if (!$loaded) {
+    warn qq{Found neither "grammarian_cautions" nor "grammarian_errors" file\n}
+       . qq{in config search path:\n}
+       . qq{\n}
+       . join(q{}, map { qq{    $_\n} } @CONFIG_PATH)
+       . qq{\n}
+       . qq{(Did you forget to install them from the distribution?)\n};
+}
 
 sub _rewrite (&$) {
     my ($transform, $text) = @_;
@@ -151,6 +160,9 @@ sub _load_cautions {
     local @ARGV = grep { -e }
                   map { ("$_.$CAUTIONS_FILE", "$_$CAUTIONS_FILE") }
                   @CONFIG_PATH;
+
+    # If no config, we're done...
+    return if !@ARGV;
 
     # Store sets of terms together...
     my @term_sets = { terms => [], defns => [], inflexions => [] };
@@ -244,7 +256,7 @@ sub _load_cautions {
     my $cautions_regex = '\b(?<term>' . join('|', reverse sort @regex_components) . ')\b';
     $CAUTIONS_REGEX = qr{$cautions_regex}i;
 
-    return;
+    return 1;
 }
 
 sub _gen_pres_participle_for {
@@ -369,6 +381,9 @@ sub _load_errors {
                   map { ("$_.$ERRORS_FILE", "$_$ERRORS_FILE") }
                   @CONFIG_PATH;
 
+    # If no config, we're done...
+    return if !@ARGV;
+
     # Extract corrections...
     my @regex_components;
     my $explanation = '????';
@@ -452,7 +467,7 @@ sub _load_errors {
         )
     }ixms;
 
-    return;
+    return 1;
 }
 
 # Apply regexes to detect offending terms...
@@ -745,7 +760,7 @@ Lingua::EN::Grammarian - Detect grammatical problems in text
 
 =head1 VERSION
 
-This document describes Lingua::EN::Grammarian version 0.000002
+This document describes Lingua::EN::Grammarian version 0.000004
 
 
 =head1 SYNOPSIS

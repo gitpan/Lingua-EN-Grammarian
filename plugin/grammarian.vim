@@ -227,7 +227,14 @@ perl <<END_SCRIPT
         $original =~ s/\s+/ /g;
         my $vertical_bar = '_' x VIM::Eval('winwidth(0)-1');
         VIM::Msg($vertical_bar, 'GRAMMARIAN_DECORATION');
-        VIM::Msg(qq{"$original" : $msg}, $highlight);
+        if ($msg =~ /\n/) {
+            $msg =~ s/^/    /gm;
+            VIM::Msg(qq{"$original"...}, $highlight);
+            VIM::Msg(qq{$msg}, $highlight);
+        }
+        else {
+            VIM::Msg(qq{"$original" : $msg}, $highlight);
+        }
 
         # Report suggestions...
         VIM::Msg($vertical_bar, 'GRAMMARIAN_DECORATION');

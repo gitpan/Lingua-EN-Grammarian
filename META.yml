@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Lingua-EN-Grammarian
-version:            0.000002
+version:            0.000004
 abstract:           Detect grammatical problems in text
 author:
     - Damian Conway <DCONWAY@CPAN.org>

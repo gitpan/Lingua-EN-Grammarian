@@ -1,5 +1,5 @@
 package Lingua::EN::Grammarian;
-our $VERSION = '0.000004';
+our $VERSION = '0.000005';
 
 use 5.010; use warnings;
 use Carp;
@@ -65,16 +65,20 @@ my $SPACE_TRANSITION = qr{
 }xms;
 
 # Extract that data...
-my $loaded   = _load_cautions();
-   $loaded ||= _load_errors();
-
-if (!$loaded) {
-    warn qq{Found neither "grammarian_cautions" nor "grammarian_errors" file\n}
-       . qq{in config search path:\n}
+if (! _load_cautions()) {
+    warn qq{No "grammarian_cautions" file found in config search path:\n}
        . qq{\n}
        . join(q{}, map { qq{    $_\n} } @CONFIG_PATH)
        . qq{\n}
-       . qq{(Did you forget to install them from the distribution?)\n};
+       . qq{(Did you forget to install it from the distribution?)\n};
+}
+
+if (! _load_errors()) {
+    warn qq{No "grammarian_errors" file found in config search path:\n}
+       . qq{\n}
+       . join(q{}, map { qq{    $_\n} } @CONFIG_PATH)
+       . qq{\n}
+       . qq{(Did you forget to install it from the distribution?)\n};
 }
 
 sub _rewrite (&$) {
@@ -760,7 +764,7 @@ Lingua::EN::Grammarian - Detect grammatical problems in text
 
 =head1 VERSION
 
-This document describes Lingua::EN::Grammarian version 0.000004
+This document describes Lingua::EN::Grammarian version 0.000005
 
 
 =head1 SYNOPSIS

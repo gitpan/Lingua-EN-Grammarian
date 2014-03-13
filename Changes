@@ -22,3 +22,12 @@ Revision history for Lingua-EN-Grammarian
     - Prevented infinite hangs when no config data found
       and warned as well (thanks Peter!)
 
+
+
+0.000005  Thu Mar 13 08:29:38 2014
+
+    - Added "in (no,any) way, shape, or form"
+      (thanks, Tom)
+
+    - Fixed loading of errors and cautions
+      (thanks, Brian)
